@@ -17,6 +17,8 @@ from drf_yasg2 import openapi
 class QuizListCreateView(ListCreateAPIView):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['active']
 
 
 class QuizDetailView(RetrieveUpdateDestroyAPIView):
