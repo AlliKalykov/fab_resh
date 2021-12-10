@@ -51,6 +51,9 @@ INSTALLED_APPS = [
     # main app
     'polls',
 
+    # documentation
+    'drf_yasg2',
+
 ]
 
 MIDDLEWARE = [

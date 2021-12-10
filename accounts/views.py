@@ -5,12 +5,12 @@ from .permissions import IsOwnerProfileOrReadOnly
 
 from .models import UserProfile
 
-from .serializers import UserSerializer
+from .serializers import UserProfileSerializer
 
 
 class UserListCreateView(ListCreateAPIView):
     queryset = UserProfile.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
@@ -20,5 +20,5 @@ class UserListCreateView(ListCreateAPIView):
 
 class UserDetailView(RetrieveUpdateDestroyAPIView):
     queryset = UserProfile.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserProfileSerializer
     permission_classes = [IsOwnerProfileOrReadOnly, IsAuthenticated]

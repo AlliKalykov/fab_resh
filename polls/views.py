@@ -1,10 +1,17 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
 
-from .models import Quiz, UserQuiz, Answer
+from .models import Quiz, UserQuiz, Question
 
 from .serializers import QuizSerializer, QuizDetailSerializer, UserQuizSerializer, UserQuizDetailSerializer,\
-    UserQuizCreateSerializer
+    UserQuizCreateSerializer, QuestionSerializer
+
+from drf_yasg2 import openapi
+from drf_yasg2.utils import swagger_auto_schema
+from rest_framework.decorators import api_view
+
+from drf_yasg2 import openapi
 
 
 class QuizListCreateView(ListCreateAPIView):
@@ -34,11 +41,19 @@ class UserQuizListCreateView(ListCreateAPIView):
         serializer.save()
         return Response(serializer.data)
 
-    # def perform_create(self, serializer):
-    #     if self.request.user:
-    #         serializer.save(user=self.request.user)
-
 
 class UserQuizDetailView(RetrieveUpdateDestroyAPIView):
     queryset = UserQuiz.objects.all()
     serializer_class = UserQuizDetailSerializer
+
+
+class QuestionListCreateView(ListCreateAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ('quiz', 'sure')
+
+
+class QuestionDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer

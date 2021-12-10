@@ -3,9 +3,11 @@ from rest_framework import serializers
 from .models import Quiz, Question, UserQuiz, Answer
 
 from accounts.models import UserProfile
+from accounts.serializers import UserProfileSerializer
 
 
 class QuizSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Quiz
         fields = '__all__'
@@ -56,6 +58,7 @@ class QuestionAnswerSerializer(serializers.Serializer):
 
 
 class UserQuizCreateSerializer(serializers.Serializer):
+    # TODO добавление авторизованного юзера
     # user = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all(), allow_null=True)
     quiz = serializers.PrimaryKeyRelatedField(queryset=Quiz.objects.all())
     question_answer = QuestionAnswerSerializer(many=True)
@@ -88,6 +91,11 @@ class UserQuizCreateSerializer(serializers.Serializer):
 
         u_q = UserQuiz(quiz=validated_data.get('quiz'))
         u_q.save()
+
+        if user.is_authenticated:
+            u_q.user = UserProfile.objects.get(user=user)
+            u_q.save()
+
         for q_a in validated_data.get('question_answer'):
             answer = Answer(user_quiz=u_q, question=q_a["question"], answer=q_a["answer"])
             answer.save()
